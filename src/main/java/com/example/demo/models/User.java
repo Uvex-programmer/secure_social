@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@Document
+@Document(collection = "Users")
 public class User {
 
     @Id

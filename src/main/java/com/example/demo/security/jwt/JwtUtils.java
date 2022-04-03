@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import java.security.SignatureException;
 import java.util.Date;
 
 @Component
@@ -19,14 +18,15 @@ public class JwtUtils {
     @Value(("${secure.app.jwtSecret}"))
     private String jwtSecret;
     @Value(("${secure.app.jwtExpirationMs}"))
-    private String jwtExpirationMs;
+    private long jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {
         UserDetailsImp userPrincipal = (UserDetailsImp) authentication.getPrincipal();
+        long ms = System.currentTimeMillis() + jwtExpirationMs;
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .setExpiration(new Date(ms))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
