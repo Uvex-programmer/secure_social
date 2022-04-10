@@ -76,6 +76,38 @@
 			<artifactId>jaxb-runtime</artifactId>
 			<version>2.3.3</version>
 		</dependency>
+		<!-- GRAPHQL -->
+		<dependency>
+			<groupId>com.graphql-java-kickstart</groupId>
+			<artifactId>graphql-java-servlet</artifactId>
+			<version>11.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>io.github.graphql-java</groupId>
+			<artifactId>graphql-java-annotations</artifactId>
+			<version>9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.graphql-java</groupId>
+			<artifactId>graphql-java-tools</artifactId>
+			<version>3.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.graphql-java</groupId>
+			<artifactId>graphiql-spring-boot-starter</artifactId>
+			<version>3.6.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.apollographql.apollo</groupId>
+			<artifactId>apollo-runtime</artifactId>
+			<version>2.5.10</version>
+		</dependency>
+		<!-- Optional, needed only for ANNOTATED nullable type-->
+		<dependency>
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
+			<version>22.0.0</version>
+		</dependency>
     </dependencies>
 
 	<build>
@@ -98,6 +130,14 @@
 				<configuration>
 					<source>17</source>
 					<target>17</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>16</source>
+					<target>16</target>
 				</configuration>
 			</plugin>
 		</plugins>
