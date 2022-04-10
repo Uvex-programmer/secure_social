@@ -1,6 +1,6 @@
 package com.example.demo.security.jwt;
 
-import com.example.demo.services.UserDetailsServiceImp;
+import com.example.demo.services.implementation.UserDetailsServiceImp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
