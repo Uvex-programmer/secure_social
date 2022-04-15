@@ -1,5 +1,6 @@
 package com.example.demo.models;
 
+import graphql.annotations.annotationTypes.GraphQLField;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -17,19 +18,25 @@ import java.util.Set;
 public class User {
 
     @Id
+    @GraphQLField
     private String id;
     @NotBlank
     @Size(max = 20)
+    @GraphQLField
     private String username;
     @NotBlank
     @Size(max = 50)
     @Email
+    @GraphQLField
     private String email;
     @NotBlank
     @Size(max = 120)
+    @GraphQLField
     private String password;
+    @GraphQLField
     private List<String> friendsIds;
     @DBRef
+    @GraphQLField
     private Set<Role> roles = new HashSet<>();
 
     public User(String username, String email, String password) {

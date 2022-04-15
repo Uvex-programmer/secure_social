@@ -1,5 +1,6 @@
 package com.example.demo.models;
 
+import graphql.annotations.annotationTypes.GraphQLField;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -17,19 +18,28 @@ import java.util.*;
 public class Group {
 
     @Id
+    @GraphQLField
     private String id;
     @NotBlank
     @Size(min = 3, max = 20)
+    @GraphQLField
     private String name;
-    private GroupRoom groupRoom = new GroupRoom();
+    @GraphQLField
+    private GroupPosts groupPosts = new GroupPosts();
     @DBRef
-    private List<User> admins = new ArrayList<>();
+    @GraphQLField
+    private Set<User> admins = new HashSet<>();
+    @GraphQLField
     private Set<User> moderators = new HashSet<>();
+    @GraphQLField
     private Set<User> members = new HashSet<>();
+    @GraphQLField
     private boolean isPrivate;
     @CreatedDate
+    @GraphQLField
     private Date createdAt;
     @LastModifiedDate
+    @GraphQLField
     private Date updatedAt;
 
     public Group(String name ,boolean isPrivate) {
@@ -37,7 +47,11 @@ public class Group {
         this.isPrivate = isPrivate;
     }
 
-    public void addAdmin(User user) {
-        this.admins.add(user);
+    public void addRole(String role, User user) {
+        switch (role){
+            case "admins" -> this.admins.add(user);
+            case "moderators" -> this.moderators.add(user);
+            default -> this.members.add(user);
+        }
     }
 }

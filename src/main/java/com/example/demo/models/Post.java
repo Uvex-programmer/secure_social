@@ -1,6 +1,7 @@
 package com.example.demo.models;
 
 
+import graphql.annotations.annotationTypes.GraphQLField;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
@@ -18,10 +19,13 @@ import java.util.Date;
 public class Post {
 
     @Id
+    @GraphQLField
     private String id;
     @NotBlank
     @Size(max = 250)
+    @GraphQLField
     private String text;
+    @GraphQLField
     private String userId;
     @CreatedDate
     private Date createdAt;
