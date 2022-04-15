@@ -3,6 +3,7 @@ package com.example.demo.models;
 import graphql.annotations.annotationTypes.GraphQLField;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -23,6 +24,7 @@ public class User {
     @NotBlank
     @Size(max = 20)
     @GraphQLField
+    @Indexed(unique = true)
     private String username;
     @NotBlank
     @Size(max = 50)
