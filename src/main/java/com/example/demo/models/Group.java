@@ -11,6 +11,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -41,17 +43,39 @@ public class Group {
     @LastModifiedDate
     @GraphQLField
     private Date updatedAt;
+    @GraphQLField
+    private int totalMembers = 0;
 
     public Group(String name ,boolean isPrivate) {
         this.name = name;
         this.isPrivate = isPrivate;
     }
 
-    public void addRole(String role, User user) {
+    public void addMember(String role, User user) {
+        incrementTotalMembers();
         switch (role){
             case "admins" -> this.admins.add(user);
             case "moderators" -> this.moderators.add(user);
             default -> this.members.add(user);
         }
     }
+
+    public void removeMember(String id){
+        this.members = this.members.stream()
+                .filter(member -> !member.getId().equals(id))
+                .collect(Collectors.toSet());
+        this.moderators = this.moderators.stream()
+                .filter(member -> !member.getId().equals(id))
+                .collect(Collectors.toSet());
+    }
+
+    public void incrementTotalMembers() {
+        this.totalMembers = totalMembers + 1;
+    }
+
+    public void decrementTotalMemers(){
+        if(this.totalMembers < 1) return;
+        this.totalMembers = totalMembers - 1;
+    }
+
 }
