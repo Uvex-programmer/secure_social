@@ -1,7 +1,7 @@
 package com.example.demo.graphql.mutations;
 
+import com.example.demo.dto.GroupDto;
 import com.example.demo.graphql.exceptions.InvalidInput;
-import com.example.demo.payload.responses.CreateGroupResponseDto;
 import com.example.demo.services.GroupService;
 import graphql.annotations.annotationTypes.GraphQLName;
 import graphql.schema.DataFetcher;
@@ -17,12 +17,12 @@ import org.springframework.util.StringUtils;
 @GraphQLName("mutation")
 @Component
 @Slf4j
-public class CreateGroupMutation implements DataFetcher<CreateGroupResponseDto>, ApplicationContextAware {
+public class CreateGroupMutation implements DataFetcher<GroupDto>, ApplicationContextAware {
 
     private static ApplicationContext context;
 
     @Override
-    public CreateGroupResponseDto get(DataFetchingEnvironment env) {
+    public GroupDto get(DataFetchingEnvironment env) {
         String groupName = env.getArgument("groupName");
         boolean isPrivate = env.getArgument("isPrivate");
 

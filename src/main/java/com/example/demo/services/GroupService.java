@@ -47,22 +47,16 @@ public class GroupService {
         return new AddMemberResponseDto().setGroupId(groupId).setUsername(user.get().getUsername());
     }
 
-    public CreateGroupResponseDto createGroup(String groupName, boolean isPrivate) {
-        String username = authenticationFacade.getAuthentication().getName();
-        Optional<User> user = userRepository.findByUsername(username);
-        Group group = new Group(groupName, isPrivate);
-        group.addRole("admins", user.get());
-
+    public GroupDto createGroup(String groupName, boolean isPrivate) {
         try{
+            String username = authenticationFacade.getAuthentication().getName();
+            Optional<User> user = userRepository.findByUsername(username);
+            Group group = new Group(groupName, isPrivate);
+            group.addRole("admins", user.get());
             Group newGroup = groupRepository.save(group);
+
             log.info("Created group {} with {} as admin", newGroup.getName(), user.get().getUsername());
-            return new CreateGroupResponseDto()
-                    .setGroupName(newGroup.getName())
-                    .setGroupId(newGroup.getId())
-                    .setPrivate(isPrivate)
-                    .setAdmins(newGroup.getAdmins())
-                    .setModerators(newGroup.getModerators())
-                    .setMembers(newGroup.getMembers());
+            return mapper.mapGroupToDto(newGroup);
         } catch (Exception e){
             log.error("Failed to create group {}: {}", groupName, e.getMessage());
             return null;

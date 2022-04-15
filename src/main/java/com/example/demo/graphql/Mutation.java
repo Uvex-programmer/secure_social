@@ -1,9 +1,9 @@
 package com.example.demo.graphql;
 
+import com.example.demo.dto.GroupDto;
 import com.example.demo.graphql.mutations.AddGroupMemberMutation;
 import com.example.demo.graphql.mutations.CreateGroupMutation;
 import com.example.demo.payload.responses.AddMemberResponseDto;
-import com.example.demo.payload.responses.CreateGroupResponseDto;
 import graphql.annotations.annotationTypes.GraphQLDataFetcher;
 import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLMutation;
@@ -27,8 +27,8 @@ public class Mutation {
     // Creation of a group.
     @GraphQLField
     @GraphQLDataFetcher(CreateGroupMutation.class)
-    public CreateGroupResponseDto createGroup(@GraphQLName("groupName") String groupName,
-                                              @GraphQLName("isPrivate") boolean isPrivate) {
+    public GroupDto createGroup(@GraphQLName("groupName") String groupName,
+                                @GraphQLName("isPrivate") boolean isPrivate) {
         return null;
     }
 }
