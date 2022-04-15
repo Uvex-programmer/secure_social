@@ -47,6 +47,7 @@ public class GroupService {
         return new AddMemberResponseDto().setGroupId(groupId).setUsername(user.get().getUsername());
     }
 
+    // TODO get username from authentication context instead. Will do later...
     public CreateGroupResponseDto createGroup(String groupName, boolean isPrivate, String username) {
         Optional<User> user = userRepository.findByUsername(username);
         Group group = new Group(groupName, isPrivate);
