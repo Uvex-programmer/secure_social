@@ -28,8 +28,7 @@ public class Mutation {
     @GraphQLField
     @GraphQLDataFetcher(CreateGroupMutation.class)
     public CreateGroupResponseDto createGroup(@GraphQLName("groupName") String groupName,
-                                              @GraphQLName("isPrivate") boolean isPrivate,
-                                              @GraphQLName("username") String username) {
+                                              @GraphQLName("isPrivate") boolean isPrivate) {
         return null;
     }
 }

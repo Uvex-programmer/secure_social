@@ -24,16 +24,15 @@ public class CreateGroupMutation implements DataFetcher<CreateGroupResponseDto>,
     @Override
     public CreateGroupResponseDto get(DataFetchingEnvironment env) {
         String groupName = env.getArgument("groupName");
-        String username = env.getArgument("username");
         boolean isPrivate = env.getArgument("isPrivate");
 
-        if (!StringUtils.hasText(username) || !StringUtils.hasText(groupName)) {
+        if (!StringUtils.hasText(groupName)) {
             throw new InvalidInput("Input validation error!", HttpStatus.BAD_REQUEST);
         }
         GroupService groupService = context.getBean(GroupService.class);
 
         try{
-            return groupService.createGroup(groupName, isPrivate, username);
+            return groupService.createGroup(groupName, isPrivate);
         }catch (Exception e) {
             log.warn("Error when creating group: {}:", e.getMessage());
             throw e;
