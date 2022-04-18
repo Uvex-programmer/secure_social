@@ -104,6 +104,13 @@ public class GroupService {
         }
     }
 
+    public List<GroupDto> getAllGroups(){
+        List<Group> groups = (List<Group>) groupRepository.findAll();
+        return groups.stream()
+                .map(grp -> mapper.mapGroupToDto(grp))
+                .collect(Collectors.toList());
+    }
+
     public GroupDto removeGroupMember(String userId, String groupId){
         try{
             Optional<Group> group = groupRepository.findById(groupId);

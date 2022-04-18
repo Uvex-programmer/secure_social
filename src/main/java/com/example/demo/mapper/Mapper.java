@@ -15,6 +15,7 @@ public class Mapper {
                 .setMembers(group.getMembers())
                 .setModerators(group.getModerators())
                 .setName(group.getName())
-                .setPrivate(group.isPrivate());
+                .setPrivate(group.isPrivate())
+                .setTotalMembers(group.getTotalMembers());
     }
 }

@@ -34,5 +34,7 @@ public class GroupDto {
     private Set<User> members;
     @GraphQLField
     private boolean isPrivate;
+    @GraphQLField
+    private int totalMembers;
 
 }
