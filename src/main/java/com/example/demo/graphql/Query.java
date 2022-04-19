@@ -30,5 +30,7 @@ public class Query {
         return null;
     }
 
-
+    @GraphQLField
+    @GraphQLDataFetcher(SingleGroupFetcher.class)
+    public GroupDto findSingleGroupById(){return null;}
 }

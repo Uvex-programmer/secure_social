@@ -127,4 +127,12 @@ public class GroupService {
             throw e;
         }
     }
+    public GroupDto findOneById(String groupId) throws Exception {
+
+        Optional<Group> group = groupRepository.findById(groupId);
+        if(group.isPresent()){
+            return mapper.mapGroupToDto(group.get());
+        }
+        throw new InvalidInput("Could not find group", HttpStatus.NOT_FOUND);
+    }
 }
