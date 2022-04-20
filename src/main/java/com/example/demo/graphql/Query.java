@@ -5,6 +5,7 @@ import com.example.demo.models.User;
 import com.example.demo.payload.responses.UserJoinedGroupsResponseDto;
 import graphql.annotations.annotationTypes.GraphQLDataFetcher;
 import graphql.annotations.annotationTypes.GraphQLField;
+import graphql.annotations.annotationTypes.GraphQLName;
 import org.springframework.stereotype.Component;
 import com.example.demo.graphql.fetchers.*;
 import java.util.List;
@@ -32,5 +33,5 @@ public class Query {
 
     @GraphQLField
     @GraphQLDataFetcher(SingleGroupFetcher.class)
-    public GroupDto findSingleGroupById(){return null;}
+    public GroupDto findSingleGroupById(@GraphQLName("groupId") String groupId){return null;}
 }

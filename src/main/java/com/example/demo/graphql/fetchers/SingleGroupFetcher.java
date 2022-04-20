@@ -22,21 +22,18 @@ import java.util.Optional;
 
 public class SingleGroupFetcher implements DataFetcher<GroupDto>, ApplicationContextAware {
 
-private final GroupService groupService;
-    @Autowired
-    public SingleGroupFetcher(GroupService groupService) {
-        this.groupService = groupService;
-    }
+    private static ApplicationContext context;
+
     @Override
-    public GroupDto get(DataFetchingEnvironment dataFetchingEnvironment) throws Exception {
-        Map args = dataFetchingEnvironment.getArguments();
-
-        return groupService.findOneById(String.valueOf(args.get("id")));
+    public GroupDto get(DataFetchingEnvironment env) throws Exception {
+        GroupService groupService = context.getBean(GroupService.class);
+        String kkk = env.getArgument("groupId");
+        return groupService.findOneById(kkk);
     }
-
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        context = applicationContext;
 
     }
 }
