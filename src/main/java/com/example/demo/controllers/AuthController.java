@@ -125,6 +125,6 @@ public class AuthController {
         if(!StringUtils.hasText(username))
             return ResponseEntity.ok().body(new MessageResponse("DUMB HACKER, BAD JWT! NOOB"));
 
-        return ResponseEntity.ok().body("Congratz");
+        return ResponseEntity.ok().body(true);
     }
 }
