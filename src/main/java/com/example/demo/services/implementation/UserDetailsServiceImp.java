@@ -1,7 +1,6 @@
 package com.example.demo.services.implementation;
 
 import com.example.demo.models.User;
-import com.example.demo.models.UserDetailsImp;
 import com.example.demo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +20,6 @@ public class UserDetailsServiceImp implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 
-        return UserDetailsImp.build(user);
+        return UserDetailsImpl.build(user);
     }
 }

@@ -10,4 +10,5 @@ public interface UserService {
     List<User> findAllUsers();
     Optional<User> findOneById(ObjectId id);
     List<User> findByIdIn(List<String>ids);
+    Optional<User> findByUsername(String username);
 }

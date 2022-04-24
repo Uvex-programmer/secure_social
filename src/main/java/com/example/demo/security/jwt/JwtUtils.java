@@ -1,14 +1,13 @@
 package com.example.demo.security.jwt;
 
-import com.example.demo.models.UserDetailsImp;
+import com.example.demo.services.implementation.UserDetailsImpl;
 import io.jsonwebtoken.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
-
 import java.util.Date;
 
 @Component
@@ -19,16 +18,26 @@ public class JwtUtils {
     private String jwtSecret;
     @Value(("${secure.app.jwtExpirationMs}"))
     private long jwtExpirationMs;
+    @Value(("${secure.app.jwtCookieName}"))
+    private String jwtCookie;
 
-    public String generateJwtToken(Authentication authentication) {
-        UserDetailsImp userPrincipal = (UserDetailsImp) authentication.getPrincipal();
+    public ResponseCookie generateJwtCookie(UserDetailsImpl userDetails) {
+        String jwt = generateJwtToken(userDetails.getUsername());
+        return ResponseCookie.from(jwtCookie, jwt).path("/api").httpOnly(true).build();
+    }
+
+    public String generateJwtToken(String username) {
         long ms = System.currentTimeMillis() + jwtExpirationMs;
         return Jwts.builder()
-                .setSubject((userPrincipal.getUsername()))
+                .setSubject((username))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(ms))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
+    }
+
+    public ResponseCookie getCleanJwtCookie() {
+        return ResponseCookie.from(jwtCookie, null).path("/api").build();
     }
 
     public String getUsernameFromJwtToken(String jwt){
