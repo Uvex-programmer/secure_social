@@ -27,7 +27,7 @@ public class Group {
     @GraphQLField
     private String name;
     @GraphQLField
-    private GroupPosts groupPosts = new GroupPosts();
+    private Set<GroupPosts> groupPosts = new HashSet<>();
     @DBRef
     @GraphQLField
     private Set<User> admins = new HashSet<>();
@@ -76,6 +76,10 @@ public class Group {
     public void decrementTotalMemers(){
         if(this.totalMembers < 1) return;
         this.totalMembers = totalMembers - 1;
+    }
+
+    public void addPost(GroupPosts post){
+        this.groupPosts.add(post);
     }
 
 }

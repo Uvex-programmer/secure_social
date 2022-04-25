@@ -25,7 +25,7 @@ public class GroupDto {
     @GraphQLField
     private String name;
     @GraphQLField
-    private GroupPosts groupPosts;
+    private Set<GroupPosts> groupPosts;
     @GraphQLField
     private Set<User> admins;
     @GraphQLField

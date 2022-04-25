@@ -27,8 +27,8 @@ public class SingleGroupFetcher implements DataFetcher<GroupDto>, ApplicationCon
     @Override
     public GroupDto get(DataFetchingEnvironment env) throws Exception {
         GroupService groupService = context.getBean(GroupService.class);
-        String kkk = env.getArgument("groupId");
-        return groupService.findOneById(kkk);
+        String groupId = env.getArgument("groupId");
+        return groupService.findOneById(groupId);
     }
 
     @Override
