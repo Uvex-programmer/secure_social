@@ -6,22 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.sql.Date;
-
 @Data
 @NoArgsConstructor
 @GraphQLType
 @Accessors(chain = true)
-public class AddNewPostResponseDto {
-
+public class RemovePostFromGroupResponseDto {
     @GraphQLField
-    private String id;
+    private String groupId;
     @GraphQLField
-    private String text;
-    @GraphQLField
-    private String username;
-    @GraphQLField
-    private String updatedAt;
-    //DAte???
+    private String postId;
 
 }

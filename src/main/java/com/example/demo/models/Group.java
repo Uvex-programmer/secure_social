@@ -81,5 +81,18 @@ public class Group {
     public void addPost(GroupPosts post){
         this.groupPosts.add(post);
     }
+    public void removePost(String postId, String username){
+
+        List<GroupPosts> newList = this.getGroupPosts().stream()
+                .filter(post -> post.getId().equals(postId) && post.getUsername().equals(username))
+                .collect(Collectors.toList());
+
+        if (newList.size()>0){ this.groupPosts = this.getGroupPosts().stream()
+                .filter(post -> !post.getId().equals(postId))
+                .collect(Collectors.toSet());}
+
+    }
+
+
 
 }

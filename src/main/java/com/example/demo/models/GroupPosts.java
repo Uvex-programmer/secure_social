@@ -1,9 +1,9 @@
 package com.example.demo.models;
 
 import graphql.annotations.annotationTypes.GraphQLField;
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -13,8 +13,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
-@Setter
-@Getter
+@Data
+@AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "GroupPosts")
 public class GroupPosts {
@@ -27,11 +27,15 @@ public class GroupPosts {
     @GraphQLField
     private String text;
     @GraphQLField
-    private String userId;
+    private String username;
     @CreatedDate
     private Date createdAt;
     @LastModifiedDate
-    private Date updatedAt;
+    @GraphQLField
+    private String updatedAt; //Måste ha string här???
 
-
+    public GroupPosts(String text, String username) {
+        this.text = text;
+        this.username = username;
+    }
 }

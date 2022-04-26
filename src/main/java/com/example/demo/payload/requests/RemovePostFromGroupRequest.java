@@ -6,20 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
-@Setter
 @Getter
-@NoArgsConstructor
+@Setter
 @AllArgsConstructor
-public class AddNewPostRequest {
+@NoArgsConstructor
+public class RemovePostFromGroupRequest {
     @GraphQLField
-    @NotBlank
-    @Size(max = 250)
-    String text;
+    private String groupId;
     @GraphQLField
-    String groupId;
-    @GraphQLField
-    String username;
+    private String postId;
 }

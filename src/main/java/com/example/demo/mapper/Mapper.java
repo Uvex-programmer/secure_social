@@ -3,7 +3,9 @@ package com.example.demo.mapper;
 import com.example.demo.dto.GroupDto;
 import com.example.demo.dto.UserDto;
 import com.example.demo.models.Group;
+import com.example.demo.models.GroupPosts;
 import com.example.demo.models.User;
+import com.example.demo.payload.responses.AddNewPostResponseDto;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,5 +28,13 @@ public class Mapper {
                 .setId(user.getId())
                 .setUsername(user.getUsername())
                 .setEmail(user.getEmail());
+    }
+
+    public AddNewPostResponseDto mapPostToGroupDto(GroupPosts post){
+        return new AddNewPostResponseDto()
+                .setId(post.getId())
+                .setText(post.getText())
+                .setUsername(post.getUsername())
+                .setUpdatedAt(String.valueOf(post.getUpdatedAt()));
     }
 }

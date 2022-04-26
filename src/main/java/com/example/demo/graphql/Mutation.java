@@ -1,12 +1,10 @@
 package com.example.demo.graphql;
 
 import com.example.demo.dto.GroupDto;
-import com.example.demo.graphql.mutations.AddGroupMemberMutation;
-import com.example.demo.graphql.mutations.AddPostToGroupMutation;
-import com.example.demo.graphql.mutations.CreateGroupMutation;
-import com.example.demo.graphql.mutations.RemoveGroupMemberMutation;
+import com.example.demo.graphql.mutations.*;
 import com.example.demo.payload.responses.AddMemberResponseDto;
 import com.example.demo.payload.responses.AddNewPostResponseDto;
+import com.example.demo.payload.responses.RemovePostFromGroupResponseDto;
 import graphql.annotations.annotationTypes.GraphQLDataFetcher;
 import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLMutation;
@@ -38,18 +36,30 @@ public class Mutation {
     // Remove member of group
     @GraphQLField
     @GraphQLDataFetcher(RemoveGroupMemberMutation.class)
-    public GroupDto removeMember(@GraphQLName("groupId") String groupId,
-                                @GraphQLName("userId") String userId) {
+    public GroupDto removeMember(
+            @GraphQLName("groupId") String groupId,
+            @GraphQLName("userId") String userId) {
         return null;
     }
 
+
     //Add new posts
     @GraphQLField
-    @GraphQLDataFetcher(AddPostToGroupMutation.class)
-    public AddNewPostResponseDto addnewPost(@GraphQLName("groupId") String groupId,
-                                            @GraphQLName("username") String username,
-                                            @GraphQLName("text") String text) {
+    @GraphQLDataFetcher(AddNewPostToGroupMutation.class)
+    public AddNewPostResponseDto addNewPostToGroup(
+            @GraphQLName("groupId") String groupId,
+            @GraphQLName("username") String username,
+            @GraphQLName("text") String text) {
         return null;
     }
+
+    @GraphQLField
+    @GraphQLDataFetcher(RemovePostFromGroupMutation.class)
+    public RemovePostFromGroupResponseDto removePostFromGroup(
+            @GraphQLName("groupId") String groupId,
+            @GraphQLName("postId") String postId){
+                return null;
+    }
+
 
 }
