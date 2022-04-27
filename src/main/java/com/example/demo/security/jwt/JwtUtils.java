@@ -23,7 +23,7 @@ public class JwtUtils {
 
     public ResponseCookie generateJwtCookie(UserDetailsImpl userDetails) {
         String jwt = generateJwtToken(userDetails.getUsername());
-        return ResponseCookie.from(jwtCookie, jwt).path("/api").httpOnly(true).build();
+        return ResponseCookie.from(jwtCookie, jwt).path("/").httpOnly(true).build();
     }
 
     public String generateJwtToken(String username) {
@@ -37,7 +37,7 @@ public class JwtUtils {
     }
 
     public ResponseCookie getCleanJwtCookie() {
-        return ResponseCookie.from(jwtCookie, null).path("/api").build();
+        return ResponseCookie.from(jwtCookie, null).path("/").build();
     }
 
     public String getUsernameFromJwtToken(String jwt){

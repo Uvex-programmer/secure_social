@@ -31,7 +31,6 @@ public class RemovePostFromGroupMutation implements DataFetcher<RemovePostFromGr
         PostService postService = context.getBean(PostService.class);
         try{
             postService.removePostFromGroup(postId, groupId);
-            System.out.println(",,");
             return null;
         }
         catch (Exception e){
