@@ -1,17 +1,19 @@
 package com.example.demo.models;
 
+import com.example.demo.repositories.SuperAdminRepository;
 import graphql.annotations.annotationTypes.GraphQLField;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 @Getter
@@ -46,21 +48,23 @@ public class Group {
     @GraphQLField
     private int totalMembers = 0;
 
-    public Group(String name ,boolean isPrivate) {
+
+
+    public Group(String name, boolean isPrivate) {
         this.name = name;
         this.isPrivate = isPrivate;
     }
 
     public void addMember(String role, User user) {
         incrementTotalMembers();
-        switch (role){
+        switch (role) {
             case "admins" -> this.admins.add(user);
             case "moderators" -> this.moderators.add(user);
             default -> this.members.add(user);
         }
     }
 
-    public void removeMember(String id){
+    public void removeMember(String id) {
         this.members = this.members.stream()
                 .filter(member -> !member.getId().equals(id))
                 .collect(Collectors.toSet());
@@ -73,26 +77,53 @@ public class Group {
         this.totalMembers = totalMembers + 1;
     }
 
-    public void decrementTotalMemers(){
-        if(this.totalMembers < 1) return;
+    public void decrementTotalMemers() {
+        if (this.totalMembers < 1) return;
         this.totalMembers = totalMembers - 1;
     }
 
-    public void addPost(GroupPosts post){
+    public void addPost(GroupPosts post) {
         this.groupPosts.add(post);
     }
-    public void removePost(String postId, String username){
+
+    public void checkPostToRemove(String postId, String username, boolean superAdmin) {
 
         List<GroupPosts> newList = this.getGroupPosts().stream()
                 .filter(post -> post.getId().equals(postId) && post.getUsername().equals(username))
                 .collect(Collectors.toList());
 
-        if (newList.size()>0){ this.groupPosts = this.getGroupPosts().stream()
-                .filter(post -> !post.getId().equals(postId))
-                .collect(Collectors.toSet());}
-
+        if (!newList.isEmpty()) {
+            deletePost(postId);
+        } else {
+            if (checkIfModerator(username)) {
+                deletePost(postId);
+            } else if (checkIfAdmin(username)) {
+                deletePost(postId);
+            } else if (superAdmin) {
+                deletePost(postId);
+            }
+        }
     }
 
+    private boolean checkIfAdmin(String username) {
+        User tempUser = this.getAdmins().stream().filter(user -> user.getUsername().equals(username)).findAny()
+                .orElse(null);
+        return tempUser != null;
+    }
+
+    private boolean checkIfModerator(String username) {
+        User tempUser = this.getModerators().stream().filter(user -> user.getUsername().equals(username)).findAny()
+                .orElse(null);
+        ;
+        return tempUser != null;
+    }
+
+
+    private void deletePost(String postId) {
+        this.groupPosts = this.getGroupPosts().stream()
+                .filter(post -> !post.getId().equals(postId))
+                .collect(Collectors.toSet());
+    }
 
 
 }
