@@ -25,14 +25,13 @@ public class AddGroupMemberMutation implements DataFetcher<AddMemberResponseDto>
     @Override
     public AddMemberResponseDto get(DataFetchingEnvironment env) {
         String groupId = env.getArgument("groupId");
-        String username = env.getArgument("username");
 
-        if (!StringUtils.hasText(username) || !StringUtils.hasText(groupId)) {
+        if (!StringUtils.hasText(groupId)) {
             throw new InvalidInput("Input validation error!", HttpStatus.BAD_REQUEST);
         }
         GroupService groupService = context.getBean(GroupService.class);
         try {
-            return groupService.addMemberByUsername(groupId, username);
+            return groupService.addMemberToGroup(groupId);
         } catch (Exception e) {
             log.warn("Error when adding member to group: {}", e.getMessage());
             throw new InvalidInput("Could not add member to the group", HttpStatus.BAD_REQUEST);

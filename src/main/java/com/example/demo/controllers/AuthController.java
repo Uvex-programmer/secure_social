@@ -121,8 +121,7 @@ public class AuthController {
     public ResponseEntity<?> authenticate(@RequestBody String groupId) {
 
         var username = authenticationFacade.getAuthentication().getName();
-
-        if(StringUtils.hasText("anonymousUser"))
+        if(username.equals("anonymousUser"))
             return ResponseEntity.ok().body(new MessageResponse("NO USER SIGNED IN!"));
 
         var access = authService.checkGroupAccess(groupId, username);

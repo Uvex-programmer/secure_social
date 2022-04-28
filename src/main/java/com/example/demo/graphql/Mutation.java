@@ -21,7 +21,7 @@ public class Mutation {
     // Add member to a group by groupId and username.
     @GraphQLField
     @GraphQLDataFetcher(AddGroupMemberMutation.class)
-    public AddMemberResponseDto addMember(@GraphQLName("groupId") String groupId, @GraphQLName("username") String username) {
+    public AddMemberResponseDto addMember(@GraphQLName("groupId") String groupId) {
         return null;
     }
 

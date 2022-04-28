@@ -37,9 +37,10 @@ public class GroupService {
         this.userRepository = userRepository;
     }
 
-    public AddMemberResponseDto addMemberByUsername(String groupId, String username) {
+    public AddMemberResponseDto addMemberToGroup(String groupId) {
         try {
             log.debug("Adding user to group {}", groupId);
+            var username = authenticationFacade.getAuthentication().getName();
             Optional<Group> group = groupRepository.findById(groupId);
             Optional<User> user = userRepository.findByUsername(username);
 
@@ -58,7 +59,7 @@ public class GroupService {
             }
             throw new InvalidInput("Could not get group or user", HttpStatus.BAD_REQUEST);
         }catch (Exception e){
-            log.warn("Could not add member with username {}", username);
+            log.warn("Could not add member");
             throw e;
         }
     }
