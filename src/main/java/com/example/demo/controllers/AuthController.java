@@ -8,8 +8,10 @@ import com.example.demo.models.User;
 import com.example.demo.payload.requests.LoginRequest;
 import com.example.demo.payload.requests.SignupRequest;
 import com.example.demo.payload.responses.MessageResponse;
+import com.example.demo.repositories.GroupRepository;
 import com.example.demo.repositories.RoleRepository;
 import com.example.demo.repositories.UserRepository;
+import com.example.demo.security.AuthenticationFacade;
 import com.example.demo.security.jwt.JwtUtils;
 import com.example.demo.services.AuthService;
 import com.example.demo.services.UserService;
@@ -36,7 +38,7 @@ import java.util.Set;
 public class AuthController {
 
     @Autowired
-    AuthenticationManager authenticationManager;
+    AuthenticationFacade authenticationFacade;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -114,17 +116,20 @@ public class AuthController {
         return ResponseEntity.ok().body(mapper.mapUserToDto(user.get()));
     }
 
-    @GetMapping("/authenticate")
+    @PostMapping("/authenticate")
     @ResponseBody
-    public ResponseEntity<?> authenticate(@CookieValue(value = "sessionId", required = false) String sessionId) {
-        if(!StringUtils.hasText(sessionId))
-            return ResponseEntity.ok().body(new MessageResponse("NOT ALLOWED"));
+    public ResponseEntity<?> authenticate(@RequestBody String groupId) {
 
-        var username = jwtUtils.getUsernameFromJwtToken(sessionId);
+        var username = authenticationFacade.getAuthentication().getName();
 
-        if(!StringUtils.hasText(username))
-            return ResponseEntity.ok().body(new MessageResponse("DUMB HACKER, BAD JWT! NOOB"));
+        if(StringUtils.hasText("anonymousUser"))
+            return ResponseEntity.ok().body(new MessageResponse("NO USER SIGNED IN!"));
 
-        return ResponseEntity.ok().body(true);
+        var access = authService.checkGroupAccess(groupId, username);
+
+        if(!access)
+            return ResponseEntity.ok().body(new MessageResponse("YOU HAVE NO PERMISSION TO ENTER THIS GROUP"));
+
+        return ResponseEntity.ok().body(access);
     }
 }

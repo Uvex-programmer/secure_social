@@ -34,4 +34,8 @@ public class Query {
     @GraphQLField
     @GraphQLDataFetcher(SingleGroupFetcher.class)
     public GroupDto findSingleGroupById(@GraphQLName("groupId") String groupId){return null;}
+
+    @GraphQLField
+    @GraphQLDataFetcher(GroupAccessFetcher.class)
+    public GroupDto getGroupsAccess(@GraphQLName("groupId") String groupId){return null;}
 }
