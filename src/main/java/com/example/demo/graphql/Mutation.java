@@ -4,6 +4,7 @@ import com.example.demo.dto.GroupDto;
 import com.example.demo.graphql.mutations.*;
 import com.example.demo.payload.responses.AddMemberResponseDto;
 import com.example.demo.payload.responses.AddNewPostResponseDto;
+import com.example.demo.payload.responses.EditPostInGroupResponseDto;
 import com.example.demo.payload.responses.RemovePostFromGroupResponseDto;
 import graphql.annotations.annotationTypes.GraphQLDataFetcher;
 import graphql.annotations.annotationTypes.GraphQLField;
@@ -42,13 +43,11 @@ public class Mutation {
         return null;
     }
 
-
     //Add new posts
     @GraphQLField
     @GraphQLDataFetcher(AddNewPostToGroupMutation.class)
     public AddNewPostResponseDto addNewPostToGroup(
             @GraphQLName("groupId") String groupId,
-            @GraphQLName("username") String username,
             @GraphQLName("text") String text) {
         return null;
     }
@@ -59,6 +58,15 @@ public class Mutation {
             @GraphQLName("groupId") String groupId,
             @GraphQLName("postId") String postId){
                 return null;
+    }
+
+    @GraphQLField
+    @GraphQLDataFetcher(EditPostInGroupMutation.class)
+    public EditPostInGroupResponseDto editPostInGroup(
+            @GraphQLName("groupId") String groupId,
+            @GraphQLName("postId") String postId,
+            @GraphQLName("text") String text) {
+        return null;
     }
 
 

@@ -1,15 +1,15 @@
 package com.example.demo.models;
 
-import com.example.demo.repositories.SuperAdminRepository;
+import com.example.demo.graphql.exceptions.InvalidInput;
 import graphql.annotations.annotationTypes.GraphQLField;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.http.HttpStatus;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -49,7 +49,6 @@ public class Group {
     private int totalMembers = 0;
 
 
-
     public Group(String name, boolean isPrivate) {
         this.name = name;
         this.isPrivate = isPrivate;
@@ -86,24 +85,31 @@ public class Group {
         this.groupPosts.add(post);
     }
 
-    public void checkPostToRemove(String postId, String username, boolean superAdmin) {
+    public void editPost(String text, String postId) {
+        for (GroupPosts post : this.groupPosts) {
+            if (post.getId().equals(postId)) {
+                post.setText(text);
+                post.setUpdatedAt(new Date().toString());
+                return;
+            }
+        }
+    }
+
+    public void checkPostToRemoveOrEdit(String postId, String username, boolean superAdmin, String action, String text) {
 
         List<GroupPosts> newList = this.getGroupPosts().stream()
                 .filter(post -> post.getId().equals(postId) && post.getUsername().equals(username))
                 .collect(Collectors.toList());
-
-        if (!newList.isEmpty()) {
-            deletePost(postId);
-        } else {
-            if (checkIfModerator(username)) {
-                deletePost(postId);
-            } else if (checkIfAdmin(username)) {
-                deletePost(postId);
-            } else if (superAdmin) {
-                deletePost(postId);
+            if (checkIfModerator(username) || checkIfAdmin(username) || superAdmin || !newList.isEmpty()) {
+                if (Objects.equals(action, "remove")) {
+                    deletePost(postId);
+                } else {
+                    editPost(text, postId);
+                }
+                return;
             }
+        throw new InvalidInput("User not accepted", HttpStatus.BAD_REQUEST);
         }
-    }
 
     private boolean checkIfAdmin(String username) {
         User tempUser = this.getAdmins().stream().filter(user -> user.getUsername().equals(username)).findAny()
@@ -118,12 +124,9 @@ public class Group {
         return tempUser != null;
     }
 
-
     private void deletePost(String postId) {
         this.groupPosts = this.getGroupPosts().stream()
                 .filter(post -> !post.getId().equals(postId))
                 .collect(Collectors.toSet());
     }
-
-
 }
