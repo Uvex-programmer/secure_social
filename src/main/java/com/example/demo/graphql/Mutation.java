@@ -39,7 +39,7 @@ public class Mutation {
     @GraphQLDataFetcher(RemoveGroupMemberMutation.class)
     public GroupDto removeMember(
             @GraphQLName("groupId") String groupId,
-            @GraphQLName("userId") String userId) {
+            @GraphQLName("username") String username) {
         return null;
     }
 
@@ -66,6 +66,15 @@ public class Mutation {
             @GraphQLName("groupId") String groupId,
             @GraphQLName("postId") String postId,
             @GraphQLName("text") String text) {
+        return null;
+    }
+
+    @GraphQLField
+    @GraphQLDataFetcher(ChangeStatusMemberMutation.class)
+    public AddMemberResponseDto changeMemberStatus(
+            @GraphQLName("groupId") String groupId,
+            @GraphQLName("newRole") String newRole,
+            @GraphQLName("username") String username) {
         return null;
     }
 

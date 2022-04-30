@@ -63,20 +63,21 @@ public class Group {
         }
     }
 
-    public void removeMember(String id) {
+    public void removeMember(String username) {
         this.members = this.members.stream()
-                .filter(member -> !member.getId().equals(id))
+                .filter(member -> !member.getUsername().equals(username))
                 .collect(Collectors.toSet());
         this.moderators = this.moderators.stream()
-                .filter(member -> !member.getId().equals(id))
+                .filter(member -> !member.getUsername().equals(username))
                 .collect(Collectors.toSet());
+        decrementTotalMembers();
     }
 
     public void incrementTotalMembers() {
         this.totalMembers = totalMembers + 1;
     }
 
-    public void decrementTotalMemers() {
+    public void decrementTotalMembers() {
         if (this.totalMembers < 1) return;
         this.totalMembers = totalMembers - 1;
     }

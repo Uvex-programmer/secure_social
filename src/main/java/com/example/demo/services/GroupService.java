@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,6 +37,31 @@ public class GroupService {
     public GroupService(GroupRepository groupRepository, UserRepository userRepository) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
+    }
+
+    public AddMemberResponseDto changeMemberStatus(String groupId, String username, String newRole){
+        try{
+            var group = groupRepository.findById(groupId);
+            var user = userRepository.findByUsername(username);
+
+            if(group.isEmpty() || user.isEmpty()){
+                throw new InvalidInput("Could not make the request", HttpStatus.BAD_REQUEST);
+            }
+
+            group.get().removeMember(user.get().getUsername());
+
+            switch(newRole){
+                case "Member" -> group.get().addMember("", user.get());
+                case "Moderator" -> group.get().addMember("moderators", user.get());
+            }
+            groupRepository.save(group.get());
+            return new AddMemberResponseDto()
+                    .setGroupId(groupId)
+                    .setUsername(username);
+
+        }catch (Exception e){
+            throw e;
+        }
     }
 
     public AddMemberResponseDto addMemberToGroup(String groupId, String username) {
@@ -118,19 +144,19 @@ public class GroupService {
                 .collect(Collectors.toList());
     }
 
-    public GroupDto removeGroupMember(String userId, String groupId){
+    public GroupDto removeGroupMember(String username, String groupId){
         try{
             Optional<Group> group = groupRepository.findById(groupId);
 
             if(group.isPresent()){
-                group.get().removeMember(userId);
+                group.get().removeMember(username);
                 groupRepository.save(group.get());
-                log.info("User with id: {} has been removed from group with id: {} ", userId, groupId);
+                log.info("User with id: {} has been removed from group with id: {} ", username, groupId);
                 return mapper.mapGroupToDto(group.get());
             }
             throw new InvalidInput("Could not find group", HttpStatus.NOT_FOUND);
         }catch (Exception e){
-            log.error("Could not remove user with id: {} from group with id: {}", userId, groupId);
+            log.error("Could not remove user with id: {} from group with id: {}", username, groupId);
             throw e;
         }
     }
