@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -37,12 +38,17 @@ public class GroupService {
         this.userRepository = userRepository;
     }
 
-    public AddMemberResponseDto addMemberToGroup(String groupId) {
+    public AddMemberResponseDto addMemberToGroup(String groupId, String username) {
         try {
-            log.debug("Adding user to group {}", groupId);
-            var username = authenticationFacade.getAuthentication().getName();
+            String name;
+            if(StringUtils.hasText(username)){
+                name = username;
+            } else {
+                name = authenticationFacade.getAuthentication().getName();
+            }
+
             Optional<Group> group = groupRepository.findById(groupId);
-            Optional<User> user = userRepository.findByUsername(username);
+            Optional<User> user = userRepository.findByUsername(name);
 
             if (group.isPresent() && user.isPresent()) {
                 List<Group> userGroups = groupRepository.findGroupsByUser(user.get().getId());

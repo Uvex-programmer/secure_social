@@ -7,6 +7,7 @@ import com.example.demo.models.Role;
 import com.example.demo.models.User;
 import com.example.demo.payload.requests.LoginRequest;
 import com.example.demo.payload.requests.SignupRequest;
+import com.example.demo.payload.responses.AuthenticationResponseDto;
 import com.example.demo.payload.responses.MessageResponse;
 import com.example.demo.repositories.GroupRepository;
 import com.example.demo.repositories.RoleRepository;
@@ -124,9 +125,9 @@ public class AuthController {
         if(username.equals("anonymousUser"))
             return ResponseEntity.ok().body(new MessageResponse("NO USER SIGNED IN!"));
 
-        var access = authService.checkGroupAccess(groupId, username);
+        AuthenticationResponseDto access = authService.checkGroupAccess(groupId, username);
 
-        if(!access)
+        if(!access.isAuthenticated())
             return ResponseEntity.ok().body(new MessageResponse("YOU HAVE NO PERMISSION TO ENTER THIS GROUP"));
 
         return ResponseEntity.ok().body(access);

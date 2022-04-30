@@ -1,12 +1,15 @@
 package com.example.demo.services;
 
+import com.example.demo.graphql.exceptions.InvalidInput;
 import com.example.demo.models.SuperAdmin;
+import com.example.demo.payload.responses.AuthenticationResponseDto;
 import com.example.demo.repositories.GroupRepository;
 import com.example.demo.repositories.SuperAdminRepository;
 import com.example.demo.repositories.UserRepository;
 import com.example.demo.security.jwt.JwtUtils;
 import com.example.demo.services.implementation.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -43,11 +46,33 @@ public class AuthService {
         return jwtUtils.generateJwtCookie(userDetails);
     }
 
-    public boolean checkGroupAccess(String groupId, String username){
+    public AuthenticationResponseDto checkGroupAccess(String groupId, String username){
         var user = userRepository.findByUsername(username);
         var group = groupRepository.findByGroupIdAndUserId(groupId, user.get().getId());
+        if(group.isEmpty()){
+            return new AuthenticationResponseDto()
+                    .setAuthenticated(false)
+                    .setRole("");
+        }
 
-        return group.isPresent();
+        var checkIfModerator = group.get().getModerators().stream()
+                .anyMatch(member -> member.getUsername().equals(user.get().getUsername()));
+
+        if(checkIfModerator) return new AuthenticationResponseDto()
+        .setAuthenticated(true)
+        .setRole("Moderator");
+
+        var checkIfAdmin = group.get().getAdmins().stream()
+                .anyMatch(member -> member.getUsername().equals(user.get().getUsername()));
+
+        if(checkIfAdmin) return new AuthenticationResponseDto()
+                .setAuthenticated(true)
+                .setRole("Admin");
+        
+        return new AuthenticationResponseDto()
+                .setAuthenticated(true)
+                .setRole("Member");
+
     }
 
     public boolean checkIfSuperAdmin(String username) {
