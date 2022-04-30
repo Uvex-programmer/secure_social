@@ -6,6 +6,7 @@ import com.example.demo.models.Group;
 import com.example.demo.models.GroupPosts;
 import com.example.demo.payload.responses.AddNewPostResponseDto;
 import com.example.demo.payload.responses.EditPostInGroupResponseDto;
+import com.example.demo.payload.responses.MessageResponse;
 import com.example.demo.payload.responses.RemovePostFromGroupResponseDto;
 import com.example.demo.repositories.GroupPostRepository;
 import com.example.demo.repositories.GroupRepository;
@@ -14,6 +15,7 @@ import com.example.demo.security.AuthenticationFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -45,7 +47,11 @@ public class PostService {
         try {
             Optional<Group> group = groupRepository.findById(groupId);
             if (group.isPresent()) {
+
                 String username = authenticationFacade.getAuthentication().getName();
+                if(username.equals("anonymousUser"))
+                    throw new InvalidInput("Nice try!", HttpStatus.BAD_REQUEST);
+
                 GroupPosts post = groupPostRepository.save(new GroupPosts(text, username));
                 group.get().addPost(post);
                 groupRepository.save(group.get());
