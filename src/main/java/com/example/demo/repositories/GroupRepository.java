@@ -16,4 +16,7 @@ public interface GroupRepository extends PagingAndSortingRepository<Group, Strin
 
     @Query(value = "{$and: [{'id' : ?0},{$or: [{'admins._id' : ?1},{'moderators._id' : ?1},{'members._id' : ?1}] }]}")
     Optional<Group> findByGroupIdAndUserId(String groupId, String userId);
+
+    @Query(value = "{$and: [{'id' : ?0},{'admins._id' : ?1}]}")
+    Optional<Group> findByGroupIdAndUserAsAdmin(String groupId, String userId);
 }
