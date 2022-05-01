@@ -1,6 +1,5 @@
 package com.example.demo.services;
 
-import com.example.demo.graphql.exceptions.InvalidInput;
 import com.example.demo.models.SuperAdmin;
 import com.example.demo.payload.responses.AuthenticationResponseDto;
 import com.example.demo.repositories.GroupRepository;
@@ -9,7 +8,6 @@ import com.example.demo.repositories.UserRepository;
 import com.example.demo.security.jwt.JwtUtils;
 import com.example.demo.services.implementation.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
