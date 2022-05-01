@@ -3,7 +3,6 @@ package com.example.demo.graphql.mutations;
 import com.example.demo.graphql.exceptions.InvalidInput;
 import com.example.demo.payload.responses.AddMemberResponseDto;
 import com.example.demo.services.GroupService;
-import com.example.demo.services.PostService;
 import graphql.annotations.annotationTypes.GraphQLName;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
