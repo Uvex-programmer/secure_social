@@ -2,10 +2,7 @@ package com.example.demo.graphql;
 
 import com.example.demo.dto.GroupDto;
 import com.example.demo.graphql.mutations.*;
-import com.example.demo.payload.responses.AddMemberResponseDto;
-import com.example.demo.payload.responses.AddNewPostResponseDto;
-import com.example.demo.payload.responses.EditPostInGroupResponseDto;
-import com.example.demo.payload.responses.RemovePostFromGroupResponseDto;
+import com.example.demo.payload.responses.*;
 import graphql.annotations.annotationTypes.GraphQLDataFetcher;
 import graphql.annotations.annotationTypes.GraphQLField;
 import graphql.annotations.annotationTypes.GraphQLMutation;
@@ -40,6 +37,13 @@ public class Mutation {
     public GroupDto removeMember(
             @GraphQLName("groupId") String groupId,
             @GraphQLName("username") String username) {
+        return null;
+    }
+    // Remove group
+    @GraphQLField
+    @GraphQLDataFetcher(RemoveGroupMutation.class)
+    public MessageResponse removeGroup(
+            @GraphQLName("groupId") String groupId) {
         return null;
     }
 

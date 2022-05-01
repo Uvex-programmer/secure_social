@@ -3,9 +3,11 @@ package com.example.demo.services;
 import com.example.demo.dto.GroupDto;
 import com.example.demo.graphql.exceptions.InvalidInput;
 import com.example.demo.mapper.Mapper;
+import com.example.demo.models.ERole;
 import com.example.demo.models.Group;
 import com.example.demo.models.User;
 import com.example.demo.payload.responses.AddMemberResponseDto;
+import com.example.demo.payload.responses.MessageResponse;
 import com.example.demo.payload.responses.UserJoinedGroupsResponseDto;
 import com.example.demo.repositories.GroupRepository;
 import com.example.demo.repositories.UserRepository;
@@ -60,6 +62,34 @@ public class GroupService {
 
         }catch (Exception e){
             throw e;
+        }
+    }
+
+    public MessageResponse removeGroup(String groupId){
+        try{
+            String username = authenticationFacade.getAuthentication().getName();
+            var user = userRepository.findByUsername(username);
+            if(user.isEmpty()) {
+                log.warn("Could not find a user!");
+                throw new InvalidInput("Not authenticated", HttpStatus.BAD_REQUEST);
+            }
+            var group = groupRepository.findByGroupIdAndUserAsAdmin(groupId, user.get().getId());
+            var checkIfSuperAdmin = user.get().getRoles().stream()
+                    .anyMatch(role -> role.getName().equals(ERole.ROLE_ADMIN));
+
+            if(group.isPresent() || checkIfSuperAdmin){
+                groupRepository.deleteById(groupId);
+                return new MessageResponse()
+                        .setMessage("Group deleted! Success");
+            }
+            log.warn("Failed to delete group");
+            return new MessageResponse()
+                    .setMessage("Failed to delete group");
+
+        }catch (Exception e){
+            log.warn("Could not remove group!");
+            return new MessageResponse()
+                    .setMessage("Failed to delete group");
         }
     }
 
