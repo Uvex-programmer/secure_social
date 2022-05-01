@@ -27,7 +27,8 @@ public class Mapper {
         return new UserDto()
                 .setId(user.getId())
                 .setUsername(user.getUsername())
-                .setEmail(user.getEmail());
+                .setEmail(user.getEmail())
+                .setRoles(user.getRoles());
     }
 
     public AddNewPostResponseDto mapPostToGroupDto(GroupPosts post){

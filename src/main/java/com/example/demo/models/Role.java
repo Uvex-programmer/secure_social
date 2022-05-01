@@ -16,6 +16,7 @@ public class Role {
     private String id;
     @GraphQLField
     private ERole name;
+
     public Role(){}
 
     public Role(ERole name) {
