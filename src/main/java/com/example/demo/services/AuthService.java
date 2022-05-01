@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import com.example.demo.models.ERole;
 import com.example.demo.models.SuperAdmin;
 import com.example.demo.payload.responses.AuthenticationResponseDto;
 import com.example.demo.repositories.GroupRepository;
@@ -46,6 +47,12 @@ public class AuthService {
 
     public AuthenticationResponseDto checkGroupAccess(String groupId, String username){
         var user = userRepository.findByUsername(username);
+        var checkIfSuperAdmin = user.get().getRoles().stream().anyMatch(role -> role.getName().equals(ERole.ROLE_ADMIN));
+
+        if(checkIfSuperAdmin) return new AuthenticationResponseDto()
+                .setAuthenticated(true)
+                .setRole("SuperAdmin");
+
         var group = groupRepository.findByGroupIdAndUserId(groupId, user.get().getId());
         if(group.isEmpty()){
             return new AuthenticationResponseDto()
