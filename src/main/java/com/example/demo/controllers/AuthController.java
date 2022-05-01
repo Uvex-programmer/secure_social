@@ -99,14 +99,10 @@ public class AuthController {
 
     @GetMapping("/whoami")
     @ResponseBody
-    public ResponseEntity<?> rememberMe(@CookieValue("sessionId") String sessionId) {
-        if(!StringUtils.hasText(sessionId))
-            return ResponseEntity.ok().body(new MessageResponse("No user logged in"));
-
-        var username = jwtUtils.getUsernameFromJwtToken(sessionId);
-
-        if(!StringUtils.hasText(username))
-            return ResponseEntity.ok().body(new MessageResponse("Bad cookie"));
+    public ResponseEntity<?> rememberMe() {
+        var username = authenticationFacade.getAuthentication().getName();
+        if(username.equals("anonymousUser"))
+            return ResponseEntity.ok().body(new MessageResponse("NO USER SIGNED IN!"));
 
         var user = userService.findByUsername(username);
         return ResponseEntity.ok().body(mapper.mapUserToDto(user.get()));
