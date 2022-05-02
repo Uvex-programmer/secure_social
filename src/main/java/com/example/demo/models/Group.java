@@ -112,11 +112,11 @@ public class Group {
         throw new InvalidInput("User not accepted", HttpStatus.BAD_REQUEST);
     }
 
-    private boolean checkIfGroupAdmin(String username) {
+    public boolean checkIfGroupAdmin(String username) {
         return this.getAdmins().stream().anyMatch(user -> user.getUsername().equals(username));
     }
 
-    private boolean checkIfGroupModerator(String username) {
+    public boolean checkIfGroupModerator(String username) {
         return this.getModerators().stream().anyMatch(user -> user.getUsername().equals(username));
     }
 

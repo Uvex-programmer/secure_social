@@ -1,7 +1,7 @@
 package com.example.demo.services;
 
+import com.example.demo.graphql.exceptions.InvalidInput;
 import com.example.demo.models.ERole;
-import com.example.demo.models.SuperAdmin;
 import com.example.demo.models.User;
 import com.example.demo.payload.responses.AuthenticationResponseDto;
 import com.example.demo.repositories.GroupRepository;
@@ -10,7 +10,9 @@ import com.example.demo.repositories.UserRepository;
 import com.example.demo.security.AuthenticationFacade;
 import com.example.demo.security.jwt.JwtUtils;
 import com.example.demo.services.implementation.UserDetailsImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class AuthService {
     private final SuperAdminRepository superAdminRepository;
     private final GroupRepository groupRepository;
@@ -49,14 +52,14 @@ public class AuthService {
         return jwtUtils.generateJwtCookie(userDetails);
     }
 
-    public AuthenticationResponseDto checkGroupAccess(String groupId, String username){
+    public AuthenticationResponseDto checkGroupAccess(String groupId, String username) {
         var user = userRepository.findByUsername(username);
-                if(checkIfSuperAdmin()) return new AuthenticationResponseDto()
+        if (checkIfSuperAdmin()) return new AuthenticationResponseDto()
                 .setAuthenticated(true)
                 .setRole("SuperAdmin");
 
         var group = groupRepository.findByGroupIdAndUserId(groupId, user.get().getId());
-        if(group.isEmpty()){
+        if (group.isEmpty()) {
             return new AuthenticationResponseDto()
                     .setAuthenticated(false)
                     .setRole("");
@@ -65,21 +68,20 @@ public class AuthService {
         var checkIfModerator = group.get().getModerators().stream()
                 .anyMatch(member -> member.getUsername().equals(user.get().getUsername()));
 
-        if(checkIfModerator) return new AuthenticationResponseDto()
-        .setAuthenticated(true)
-        .setRole("Moderator");
+        if (checkIfModerator) return new AuthenticationResponseDto()
+                .setAuthenticated(true)
+                .setRole("Moderator");
 
         var checkIfAdmin = group.get().getAdmins().stream()
                 .anyMatch(member -> member.getUsername().equals(user.get().getUsername()));
 
-        if(checkIfAdmin) return new AuthenticationResponseDto()
+        if (checkIfAdmin) return new AuthenticationResponseDto()
                 .setAuthenticated(true)
                 .setRole("Admin");
-        
+
         return new AuthenticationResponseDto()
                 .setAuthenticated(true)
                 .setRole("Member");
-
     }
 
     public boolean checkIfSuperAdmin() {
@@ -88,4 +90,25 @@ public class AuthService {
         var admin = user.get().getRoles().stream().anyMatch(role -> role.getName().equals(ERole.ROLE_ADMIN));
         return admin;
     }
+
+    public String getLoggedInUsername() {
+        String username = authenticationFacade.getAuthentication().getName();
+        var user = userRepository.findByUsername(username);
+        if (user.isEmpty()) {
+            log.warn("Could not find a user!");
+            throw new InvalidInput("Not authenticated", HttpStatus.BAD_REQUEST);
+        }
+        return username;
+    }
+
+    public Optional<User> getLogginInUser() {
+        String username = authenticationFacade.getAuthentication().getName();
+        var user = userRepository.findByUsername(username);
+        if (user.isEmpty()) {
+            log.warn("Could not find a user!");
+            throw new InvalidInput("Not authenticated", HttpStatus.BAD_REQUEST);
+        }
+        return user;
+    }
+
 }

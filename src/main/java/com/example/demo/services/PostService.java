@@ -46,7 +46,7 @@ public class PostService {
             Optional<Group> group = groupRepository.findById(groupId);
             if (group.isPresent()) {
 
-                String username = authenticationFacade.getAuthentication().getName();
+                String username = auth.getLoggedInUsername();
                 if(username.equals("anonymousUser"))
                     throw new InvalidInput("Nice try!", HttpStatus.BAD_REQUEST);
 
@@ -67,7 +67,7 @@ public class PostService {
         try {
             Optional<Group> group = groupRepository.findById(groupId);
             if (group.isPresent()) {
-                String username = authenticationFacade.getAuthentication().getName();
+                String username = auth.getLoggedInUsername();
                 group.get().checkPostToRemoveOrEdit(postId, username, auth.checkIfSuperAdmin(), "remove","");
                 groupRepository.save(group.get());
                 return null;
@@ -85,7 +85,7 @@ public class PostService {
             Optional<Group> group = groupRepository.findById(groupId);
             if (group.isPresent()) {
 
-                String username = authenticationFacade.getAuthentication().getName();
+                String username = auth.getLoggedInUsername();
                 groupPostRepository.save(new GroupPosts(text, username));
                 group.get().checkPostToRemoveOrEdit(postId, username, auth.checkIfSuperAdmin(), "edit", text);
                 groupRepository.save(group.get());
