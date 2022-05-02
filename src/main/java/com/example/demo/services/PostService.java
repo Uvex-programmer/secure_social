@@ -68,7 +68,7 @@ public class PostService {
             Optional<Group> group = groupRepository.findById(groupId);
             if (group.isPresent()) {
                 String username = authenticationFacade.getAuthentication().getName();
-                group.get().checkPostToRemoveOrEdit(postId, username, auth.checkIfSuperAdmin(username), "remove","");
+                group.get().checkPostToRemoveOrEdit(postId, username, auth.checkIfSuperAdmin(), "remove","");
                 groupRepository.save(group.get());
                 return null;
             }
@@ -87,7 +87,7 @@ public class PostService {
 
                 String username = authenticationFacade.getAuthentication().getName();
                 groupPostRepository.save(new GroupPosts(text, username));
-                group.get().checkPostToRemoveOrEdit(postId, username, auth.checkIfSuperAdmin(username), "edit", text);
+                group.get().checkPostToRemoveOrEdit(postId, username, auth.checkIfSuperAdmin(), "edit", text);
                 groupRepository.save(group.get());
                 return null;
             }

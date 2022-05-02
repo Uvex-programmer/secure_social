@@ -41,6 +41,7 @@ public class GroupService {
     }
 
     public AddMemberResponseDto changeMemberStatus(String groupId, String username, String newRole){
+
         try{
             var group = groupRepository.findById(groupId);
             var user = userRepository.findByUsername(username);

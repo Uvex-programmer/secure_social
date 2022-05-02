@@ -101,28 +101,23 @@ public class Group {
         List<GroupPosts> newList = this.getGroupPosts().stream()
                 .filter(post -> post.getId().equals(postId) && post.getUsername().equals(username))
                 .collect(Collectors.toList());
-            if (checkIfModerator(username) || checkIfAdmin(username) || superAdmin || !newList.isEmpty()) {
-                if (Objects.equals(action, "remove")) {
-                    deletePost(postId);
-                } else {
-                    editPost(text, postId);
-                }
-                return;
+        if (checkIfGroupModerator(username) || checkIfGroupAdmin(username) || superAdmin || !newList.isEmpty()) {
+            if (Objects.equals(action, "remove")) {
+                deletePost(postId);
+            } else {
+                editPost(text, postId);
             }
-        throw new InvalidInput("User not accepted", HttpStatus.BAD_REQUEST);
+            return;
         }
-
-    private boolean checkIfAdmin(String username) {
-        User tempUser = this.getAdmins().stream().filter(user -> user.getUsername().equals(username)).findAny()
-                .orElse(null);
-        return tempUser != null;
+        throw new InvalidInput("User not accepted", HttpStatus.BAD_REQUEST);
     }
 
-    private boolean checkIfModerator(String username) {
-        User tempUser = this.getModerators().stream().filter(user -> user.getUsername().equals(username)).findAny()
-                .orElse(null);
-        ;
-        return tempUser != null;
+    private boolean checkIfGroupAdmin(String username) {
+        return this.getAdmins().stream().anyMatch(user -> user.getUsername().equals(username));
+    }
+
+    private boolean checkIfGroupModerator(String username) {
+        return this.getModerators().stream().anyMatch(user -> user.getUsername().equals(username));
     }
 
     private void deletePost(String postId) {
