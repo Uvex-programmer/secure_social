@@ -22,7 +22,7 @@ public class User {
     @GraphQLField
     private String id;
     @NotBlank
-    @Size(max = 20)
+    @Size(min = 5, max = 20)
     @GraphQLField
     @Indexed(unique = true)
     private String username;
@@ -32,7 +32,7 @@ public class User {
     @GraphQLField
     private String email;
     @NotBlank
-    @Size(max = 120)
+    @Size(min = 8, max = 64)
     @GraphQLField
     private String password;
     @GraphQLField
